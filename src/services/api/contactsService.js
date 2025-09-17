@@ -67,5 +67,117 @@ export const contactsService = {
       contact.email.toLowerCase().includes(searchTerm) ||
       contact.title.toLowerCase().includes(searchTerm)
     );
+  },
+
+  async bulkUpdate(contactIds, updateData) {
+    await delay(500);
+    const updated = [];
+    const errors = [];
+
+    for (const id of contactIds) {
+      try {
+        const index = contacts.findIndex(c => c.Id === parseInt(id));
+        if (index === -1) {
+          errors.push({ id, error: "Contact not found" });
+          continue;
+        }
+
+        contacts[index] = {
+          ...contacts[index],
+          ...updateData,
+          Id: parseInt(id),
+          updatedAt: new Date().toISOString()
+        };
+        updated.push({ ...contacts[index] });
+      } catch (err) {
+        errors.push({ id, error: err.message });
+      }
+    }
+
+    return {
+      updated,
+      errors,
+      successCount: updated.length,
+      errorCount: errors.length
+    };
+  },
+
+  async bulkDelete(contactIds) {
+    await delay(600);
+    const deleted = [];
+    const errors = [];
+
+    // Sort IDs in descending order to avoid index shifting issues
+    const sortedIds = contactIds.sort((a, b) => b - a);
+
+    for (const id of sortedIds) {
+      try {
+        const index = contacts.findIndex(c => c.Id === parseInt(id));
+        if (index === -1) {
+          errors.push({ id, error: "Contact not found" });
+          continue;
+        }
+
+        const deletedContact = contacts.splice(index, 1)[0];
+        deleted.push(deletedContact);
+      } catch (err) {
+        errors.push({ id, error: err.message });
+      }
+    }
+
+    return {
+      deleted,
+      errors,
+      successCount: deleted.length,
+      errorCount: errors.length
+    };
+  },
+
+  async bulkExport(contactsData) {
+    await delay(400);
+    
+    // Create CSV content
+    const headers = [
+      'ID', 'First Name', 'Last Name', 'Email', 'Phone', 
+      'Title', 'Company', 'Status', 'Created At', 'Updated At'
+    ];
+    
+    const csvRows = [
+      headers.join(','),
+      ...contactsData.map(contact => [
+        contact.Id,
+        `"${contact.firstName}"`,
+        `"${contact.lastName}"`,
+        `"${contact.email}"`,
+        `"${contact.phone || ''}"`,
+        `"${contact.title || ''}"`,
+        `"${contact.companyName || ''}"`,
+        `"${contact.status || 'Active'}"`,
+        `"${contact.createdAt || ''}"`,
+        `"${contact.updatedAt || ''}"`
+      ].join(','))
+    ];
+    
+    const csvContent = csvRows.join('\n');
+    
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `contacts_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    return {
+      success: true,
+      filename: `contacts_export_${new Date().toISOString().split('T')[0]}.csv`,
+      count: contactsData.length
+    };
   }
 };
