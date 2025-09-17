@@ -391,8 +391,8 @@ return (
                       </div>
                     )}
                     <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                      <span>Created: {format(new Date(contact.createdAt), "MMM d, yyyy")}</span>
-                      <span>Updated: {format(new Date(contact.updatedAt), "MMM d, yyyy")}</span>
+<span>Created: {contact.createdAt && !isNaN(new Date(contact.createdAt)) ? format(new Date(contact.createdAt), "MMM d, yyyy") : "N/A"}</span>
+                      <span>Updated: {contact.updatedAt && !isNaN(new Date(contact.updatedAt)) ? format(new Date(contact.updatedAt), "MMM d, yyyy") : "N/A"}</span>
                     </div>
                   </CardContent>
                 </Card>
