@@ -70,17 +70,19 @@ const ActivitiesList = () => {
     } else if (filterStatus === "pending") {
       filtered = filtered.filter(activity => !activity.completed);
     } else if (filterStatus === "overdue") {
-      const now = new Date();
+const now = new Date();
       filtered = filtered.filter(activity => 
-        !activity.completed && isBefore(new Date(activity.dueDate), now)
+        !activity.completed && activity.dueDate && isBefore(new Date(activity.dueDate), now)
       );
     }
 
     // Sort by due date
     filtered = filtered.sort((a, b) => {
       if (a.completed && !b.completed) return 1;
-      if (!a.completed && b.completed) return -1;
-      return new Date(a.dueDate) - new Date(b.dueDate);
+if (!a.completed && b.completed) return -1;
+      const dateA = a.dueDate ? new Date(a.dueDate) : new Date(0);
+      const dateB = b.dueDate ? new Date(b.dueDate) : new Date(0);
+      return dateA - dateB;
     });
 
     setFilteredActivities(filtered);
@@ -175,8 +177,8 @@ const ActivitiesList = () => {
   const getActivityColor = (activity) => {
     if (activity.completed) return "success";
     
-    const now = new Date();
-    const dueDate = new Date(activity.dueDate);
+const now = new Date();
+    const dueDate = activity.dueDate ? new Date(activity.dueDate) : null;
     
     if (isBefore(dueDate, now)) return "danger";
     if (isBefore(dueDate, new Date(now.getTime() + 24 * 60 * 60 * 1000))) return "warning";
@@ -187,8 +189,7 @@ const ActivitiesList = () => {
     if (activity.completed) return "Completed";
     
     const now = new Date();
-    const dueDate = new Date(activity.dueDate);
-    
+const dueDate = activity.dueDate ? new Date(activity.dueDate) : null;
     if (isBefore(dueDate, now)) return "Overdue";
     if (isBefore(dueDate, new Date(now.getTime() + 24 * 60 * 60 * 1000))) return "Due Soon";
     return "Pending";
@@ -341,7 +342,7 @@ const ActivitiesList = () => {
                           )}
                           <div className="flex items-center">
                             <ApperIcon name="Calendar" className="h-4 w-4 mr-2" />
-                            Due: {format(new Date(activity.dueDate), "MMM d, yyyy h:mm a")}
+Due: {activity.dueDate ? format(new Date(activity.dueDate), "MMM d, yyyy h:mm a") : "No due date"}
                           </div>
                         </div>
                       </div>
