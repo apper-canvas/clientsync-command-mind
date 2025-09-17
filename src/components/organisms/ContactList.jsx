@@ -47,13 +47,13 @@ const [contacts, setContacts] = useState([]);
     loadData();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     if (searchTerm) {
       const filtered = contacts.filter(contact =>
-        contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.title.toLowerCase().includes(searchTerm.toLowerCase())
+        contact.firstName_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contact.lastName_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contact.email_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contact.title_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredContacts(filtered);
     } else {
@@ -182,9 +182,11 @@ const handleContactSaved = (savedContact) => {
     setSelectedContact(null);
   };
 
-  const getCompanyName = (companyId) => {
-    const company = companies.find(c => c.Id === companyId);
-    return company ? company.name : "Unknown Company";
+const getCompanyName = (companyId) => {
+    // Handle both direct ID and lookup object structure
+    const actualId = companyId?.Id || companyId;
+    const company = companies.find(c => c.Id === actualId);
+    return company ? (company.name_c || company.name || "Unknown Company") : "Unknown Company";
   };
 
   if (loading) return <Loading variant="list" />;
@@ -340,28 +342,28 @@ return (
                         />
                       </div>
                       <div className="flex items-start justify-between flex-1">
-                        <div className="flex items-start space-x-4">
+<div className="flex items-start space-x-4">
                           <div className="h-12 w-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-medium text-lg">
-                            {contact.firstName?.[0]}{contact.lastName?.[0]}
+                            {contact.firstName_c?.[0]}{contact.lastName_c?.[0]}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-semibold text-slate-900">
-                              {contact.firstName} {contact.lastName}
+                              {contact.firstName_c} {contact.lastName_c}
                             </h3>
                             <p className="text-sm font-medium text-primary-600 mb-1">
-                              {contact.title}
+                              {contact.title_c}
                             </p>
                             <p className="text-sm text-slate-600 mb-1">
-                              {getCompanyName(contact.companyId)}
+                              {getCompanyName(contact.companyId_c)}
                             </p>
                             <div className="flex items-center space-x-4 text-sm text-slate-500">
                               <div className="flex items-center">
                                 <ApperIcon name="Mail" className="h-4 w-4 mr-1" />
-                                {contact.email}
+                                {contact.email_c}
                               </div>
                               <div className="flex items-center">
                                 <ApperIcon name="Phone" className="h-4 w-4 mr-1" />
-                                {contact.phone}
+                                {contact.phone_c}
                               </div>
                             </div>
                           </div>
@@ -385,14 +387,14 @@ return (
                         </div>
                       </div>
                     </div>
-                    {contact.notes && (
+                    {contact.notes_c && (
                       <div className="mt-4 pt-4 border-t border-slate-200">
-                        <p className="text-sm text-slate-600">{contact.notes}</p>
+                        <p className="text-sm text-slate-600">{contact.notes_c}</p>
                       </div>
                     )}
                     <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-<span>Created: {contact.createdAt && !isNaN(new Date(contact.createdAt)) ? format(new Date(contact.createdAt), "MMM d, yyyy") : "N/A"}</span>
-                      <span>Updated: {contact.updatedAt && !isNaN(new Date(contact.updatedAt)) ? format(new Date(contact.updatedAt), "MMM d, yyyy") : "N/A"}</span>
+                      <span>Created: {contact.createdAt_c && !isNaN(new Date(contact.createdAt_c)) ? format(new Date(contact.createdAt_c), "MMM d, yyyy") : "N/A"}</span>
+                      <span>Updated: {contact.updatedAt_c && !isNaN(new Date(contact.updatedAt_c)) ? format(new Date(contact.updatedAt_c), "MMM d, yyyy") : "N/A"}</span>
                     </div>
                   </CardContent>
                 </Card>

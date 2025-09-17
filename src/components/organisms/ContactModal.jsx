@@ -19,15 +19,15 @@ const ContactModal = ({ isOpen, onClose, contact, companies, onContactSaved }) =
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (contact) {
+if (contact) {
       setFormData({
-        firstName: contact.firstName || "",
-        lastName: contact.lastName || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        companyId: contact.companyId?.toString() || "",
-        title: contact.title || "",
-        notes: contact.notes || ""
+        firstName: contact.firstName_c || "",
+        lastName: contact.lastName_c || "",
+        email: contact.email_c || "",
+        phone: contact.phone_c || "",
+        companyId: contact.companyId_c?.Id?.toString() || contact.companyId_c?.toString() || "",
+        title: contact.title_c || "",
+        notes: contact.notes_c || ""
       });
     } else {
       setFormData({
