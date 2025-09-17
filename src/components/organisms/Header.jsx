@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import { cn } from "@/utils/cn";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
+import { AuthContext } from "../../App";
 
 const Header = ({ onMenuToggle, title }) => {
+  const { logout } = useContext(AuthContext);
+  const { user } = useSelector((state) => state.user);
   return (
     <header className="bg-white border-b border-slate-200 shadow-soft lg:ml-64">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -26,7 +30,7 @@ const Header = ({ onMenuToggle, title }) => {
             )}
           </div>
 
-          {/* Right side - Actions */}
+{/* Right side - Actions */}
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
@@ -46,6 +50,23 @@ const Header = ({ onMenuToggle, title }) => {
             >
               <ApperIcon name="Settings" className="h-5 w-5 text-slate-600" />
             </Button>
+
+            {user && (
+              <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-slate-200">
+                <div className="text-sm text-slate-600">
+                  {user.firstName} {user.lastName}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="p-2 hover:bg-slate-100"
+                  title="Logout"
+                >
+                  <ApperIcon name="LogOut" className="h-5 w-5 text-slate-600" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
