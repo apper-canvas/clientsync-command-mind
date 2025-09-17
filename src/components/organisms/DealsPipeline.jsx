@@ -227,7 +227,7 @@ const DealsPipeline = () => {
                               </div>
                               <div className="flex items-center text-xs text-slate-500">
                                 <ApperIcon name="Calendar" className="h-3 w-3 mr-1" />
-                                {format(new Date(deal.closeDate), "MMM d, yyyy")}
+{deal.closeDate && !isNaN(new Date(deal.closeDate)) ? format(new Date(deal.closeDate), "MMM d, yyyy") : "No date set"}
                               </div>
                             </div>
 
