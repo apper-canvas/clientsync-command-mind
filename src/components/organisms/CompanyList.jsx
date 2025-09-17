@@ -225,8 +225,8 @@ const CompanyList = () => {
                           </div>
                         )}
 
-                        <div className="flex items-center justify-between text-xs text-slate-500">
-                          <span>Created: {format(new Date(company.createdAt), "MMM d, yyyy")}</span>
+<div className="flex items-center justify-between text-xs text-slate-500">
+                          <span>Created: {company.createdAt && !isNaN(new Date(company.createdAt)) ? format(new Date(company.createdAt), "MMM d, yyyy") : "N/A"}</span>
                         </div>
                       </div>
                     </div>
