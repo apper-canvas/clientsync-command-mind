@@ -29,9 +29,21 @@ export const companiesService = {
         console.error("Failed to fetch companies:", response.message);
         toast.error(response.message);
         return [];
-      }
+}
 
-      return response.data || [];
+      // Transform database field names to UI field names
+      const transformedData = (response.data || []).map(item => ({
+        Id: item.Id,
+        name: item.name_c,
+        industry: item.industry_c,
+        size: item.size_c,
+        website: item.website_c,
+        address: item.address_c,
+        notes: item.notes_c,
+        createdAt: item.createdAt_c
+      }));
+
+      return transformedData;
     } catch (error) {
       console.error("Error fetching companies:", error?.response?.data?.message || error);
       return [];
@@ -63,9 +75,21 @@ export const companiesService = {
       if (!response.success) {
         console.error("Failed to fetch company:", response.message);
         throw new Error(response.message);
-      }
+}
 
-      return response.data;
+      // Transform database field names to UI field names
+      const transformedData = {
+        Id: response.data.Id,
+        name: response.data.name_c,
+        industry: response.data.industry_c,
+        size: response.data.size_c,
+        website: response.data.website_c,
+        address: response.data.address_c,
+        notes: response.data.notes_c,
+        createdAt: response.data.createdAt_c
+      };
+
+      return transformedData;
     } catch (error) {
       console.error("Error fetching company:", error?.response?.data?.message || error);
       throw error;
@@ -110,9 +134,24 @@ export const companiesService = {
             record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
             if (record.message) toast.error(record.message);
           });
-        }
+}
         
-        return successful.length > 0 ? successful[0].data : null;
+        if (successful.length > 0) {
+          // Transform database field names to UI field names
+          const rawData = successful[0].data;
+          const transformedData = {
+            Id: rawData.Id,
+            name: rawData.name_c,
+            industry: rawData.industry_c,
+            size: rawData.size_c,
+            website: rawData.website_c,
+            address: rawData.address_c,
+            notes: rawData.notes_c,
+            createdAt: rawData.createdAt_c
+          };
+          return transformedData;
+        }
+        return null;
       }
     } catch (error) {
       console.error("Error creating company:", error?.response?.data?.message || error);
@@ -158,9 +197,24 @@ export const companiesService = {
             record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
             if (record.message) toast.error(record.message);
           });
-        }
+}
         
-        return successful.length > 0 ? successful[0].data : null;
+        if (successful.length > 0) {
+          // Transform database field names to UI field names
+          const rawData = successful[0].data;
+          const transformedData = {
+            Id: rawData.Id,
+            name: rawData.name_c,
+            industry: rawData.industry_c,
+            size: rawData.size_c,
+            website: rawData.website_c,
+            address: rawData.address_c,
+            notes: rawData.notes_c,
+            createdAt: rawData.createdAt_c
+          };
+          return transformedData;
+        }
+        return null;
       }
     } catch (error) {
       console.error("Error updating company:", error?.response?.data?.message || error);
@@ -252,9 +306,21 @@ export const companiesService = {
       if (!response.success) {
         console.error("Failed to search companies:", response.message);
         return [];
-      }
+}
 
-      return response.data || [];
+      // Transform database field names to UI field names
+      const transformedData = (response.data || []).map(item => ({
+        Id: item.Id,
+        name: item.name_c,
+        industry: item.industry_c,
+        size: item.size_c,
+        website: item.website_c,
+        address: item.address_c,
+        notes: item.notes_c,
+        createdAt: item.createdAt_c
+      }));
+
+      return transformedData;
     } catch (error) {
       console.error("Error searching companies:", error?.response?.data?.message || error);
 return [];
